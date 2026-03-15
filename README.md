@@ -41,8 +41,9 @@ Python
 
 AM_20_1['inv_std_sum'] = (1/AM_20_1['std_for_Higher']) + (1/AM_20_1['std_for_Lower'])
 AM_20_1['Weight_for_Higher'] = (1/AM_20_1['std_for_Higher']) / (AM_20_1['inv_std_sum'])
-This ensures that the more volatile stock in the pair receives a smaller allocation, balancing the risk of the overall trade.
 ```
+
+This ensures that the more volatile stock in the pair receives a smaller allocation, balancing the risk of the overall trade.
 
 
 **3. Realistic Backtesting**
