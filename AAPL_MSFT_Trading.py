@@ -12,7 +12,6 @@ MSFT = pd.read_csv(MSFT_file)
 # used this to check data format (adj close was float64)
 # print(AAPL.info())
 # print(MSFT.info())
-
 AAPL['Date'] = pd.to_datetime(AAPL['Date'])
 AAPL = AAPL[AAPL['Date'].dt.year.between(2014,2021)]                             
 MSFT['Date'] = pd.to_datetime(MSFT['Date'])
@@ -49,6 +48,8 @@ AM_20_1['Weight_for_Lower'] = (1/AM_20_1['std_for_Lower']) / (AM_20_1['inv_std_s
 
 # calc to "long" the lower stock and "short" the higher stock
 AM_20_1['Strategy'] = ((AM_20_1['Higher'].pct_change())*(AM_20_1['Signal']).shift(1))*(AM_20_1['Weight_for_Higher'].shift(1))*(-1) + ((AM_20_1['Lower'].pct_change())*(AM_20_1['Signal']).shift(1))*(AM_20_1['Weight_for_Lower'].shift(1))
+
+# calculates Sharpe Ratio
 Strategy_Daily = AM_20_1['Strategy'].fillna(0)
 Strategy_Daily_Mean = Strategy_Daily.mean()
 Strategy_Daily_Std = Strategy_Daily.std()
@@ -58,15 +59,10 @@ else:
     Sharpe_20_1 = 0
 Sharpe_text_20_1 = f'Annualized Sharpe: {Sharpe_20_1: .2f}'
 
-    
-# calculate return for holding both stocks
-# AM_20_1['AAPL_MSFT_Daily_Return'] = (AM_20_1['Adj Close_AAPL'].pct_change() + AM_20_1['Adj Close_MSFT'].pct_change())/2
-# AM_20_1['Buy_Hold'] = ((1 + AM_20_1['AAPL_MSFT_Daily_Return'].fillna(0)).cumprod()-1)*100
-
 # uses "1+" to allow returns to compound, and then take it out at end w/ "-1" to leave the investment return
 AM_20_1['Total_Return'] = ((1 + AM_20_1['Strategy'].fillna(0)).cumprod()-1)*100
 
-# filters through 1999-2020 data and excludes 1999 (used 1999 to generate data so there was no lapse to start 2000)
+# filters through 2014-2021 data and excludes 2014 (used 2014 to generate data so there was no lapse to start 2015)
 AM_20_1_Chart = AM_20_1[AM_20_1['Date'].dt.year >= 2015].copy()
 
 # same steps for AM_60_2 (adjust span and z score threshold)
@@ -109,7 +105,8 @@ fig, ((a,b),(c,d)) = plt.subplots(2,2, figsize = (12,10), sharex=True)
                                                   
 fig.suptitle('Z-Score Strategy Investment Returns', fontsize=16)
 
-# set up chart layout / info for each trading strategy
+# set up chart layout / info for Z-Score and each trading strategy
+# added Sharpe Ratio to trading charts
 AM_20_1_Chart.plot(ax=a, x = 'Date', y='Z-Score')
 a.set_title('Z-Score Signal: 20-Day Tactical Window')
 a.set_xlabel('Year')
