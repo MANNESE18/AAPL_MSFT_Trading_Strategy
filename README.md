@@ -26,7 +26,8 @@ This Python project implements a **Pairs Trading Strategy** between Apple (AAPL)
 
 * **Exponential Weighted Functions (EWM)**: Used for calculating rolling means and standard deviations to give more weight to recent price action.
 
-Key Achievements in Code
+## Key Achievements in Code
+
 **1. Robust Signal Logic**
 
 The code uses `np.maximum` and `np.minimum` to handle "Higher" and "Lower" stock designations dynamically. This ensures the spread is always calculated relative to the dominant price, preventing negative spreads and simplifying the Z-score logic.
